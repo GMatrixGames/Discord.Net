@@ -393,6 +393,58 @@ namespace Discord.Interactions
             return await RestClient.BulkOverwriteGlobalCommands(props.ToArray()).ConfigureAwait(false);
         }
 
+        public async Task RegisterCommandsAsync(bool deleteMissing = true, params ulong[] guildIds)
+        {
+            EnsureClientReady();
+
+            if (guildIds?.Length <= 0) guildIds = Array.Empty<ulong>();
+
+            IReadOnlyCollection<IApplicationCommand> existing = null;
+            var globalProps = new List<ApplicationCommandProperties>();
+            var guildProps = new List<ApplicationCommandProperties>();
+
+            foreach (var module in _typedModuleDefs.Values)
+            {
+                if (module.Attributes.Any(attribute => attribute is GlobalAttribute) || module.SlashCommands.Any(s => s.Attributes.Any(a => a is GlobalAttribute)))
+                {
+                    globalProps.AddRange(module.ToApplicationCommandProps());
+                }
+                else
+                {
+                    guildProps.AddRange(module.ToApplicationCommandProps());
+                }
+            }
+
+            foreach (var guildId in guildIds)
+            {
+                if (!deleteMissing)
+                    existing = await RestClient.GetGuildApplicationCommands(guildId).ConfigureAwait(false);
+
+                if (existing != null)
+                {
+                    var missing = existing.Where(x => !guildProps.Any(y => y.Name.IsSpecified && y.Name.Value == x.Name) && x is SocketApplicationCommand { IsGlobalCommand: true });
+                    guildProps.AddRange(missing.Select(x => x.ToApplicationCommandProps()));
+                }
+
+                // Console.WriteLine(guildProps.Count + " guild commands");
+
+                await RestClient.BulkOverwriteGuildCommands(guildProps.ToArray(), guildId).ConfigureAwait(false);
+            }
+
+            if (deleteMissing)
+                existing = await RestClient.GetGlobalApplicationCommands().ConfigureAwait(false);
+
+            if (existing != null)
+            {
+                var missing = existing.Where(x => !globalProps.Any(y => y.Name.IsSpecified && y.Name.Value == x.Name));
+                globalProps.AddRange(missing.Select(x => x.ToApplicationCommandProps()));
+            }
+
+            // Console.WriteLine(globalProps.Count + " global commands");
+
+            await RestClient.BulkOverwriteGlobalCommands(globalProps.ToArray()).ConfigureAwait(false);
+        }
+
         /// <summary>
         ///     Register Application Commands from <paramref name="commands"/> to a guild.
         /// </summary>
