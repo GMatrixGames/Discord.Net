@@ -46,7 +46,6 @@ namespace Discord.Interactions
         internal SlashCommandInfo(Builders.SlashCommandBuilder builder, ModuleInfo module, InteractionService commandService) : base(builder, module, commandService)
         {
             Description = builder.Description;
-            DefaultPermission = builder.DefaultPermission;
             IsEnabledInDm = builder.IsEnabledInDm;
             DefaultMemberPermissions = builder.DefaultMemberPermissions;
             Parameters = builder.Parameters.Select(x => x.Build(this)).ToImmutableArray();

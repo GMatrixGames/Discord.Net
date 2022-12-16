@@ -39,12 +39,6 @@ namespace Discord.Interactions
         public string Description { get; }
 
         /// <summary>
-        ///     Gets the default Permission of this module.
-        /// </summary>
-        [Obsolete($"To be deprecated soon, use {nameof(IsEnabledInDm)} and {nameof(DefaultMemberPermissions)} instead.")]
-        public bool DefaultPermission { get; }
-
-        /// <summary>
         ///     Gets whether this command can be used in DMs.
         /// </summary>
         public bool IsEnabledInDm { get; }
@@ -120,7 +114,6 @@ namespace Discord.Interactions
             SlashGroupName = builder.SlashGroupName;
             Description = builder.Description;
             Parent = parent;
-            DefaultPermission = builder.DefaultPermission;
             IsEnabledInDm = builder.IsEnabledInDm;
             DefaultMemberPermissions = BuildDefaultMemberPermissions(builder);
             SlashCommands = BuildSlashCommands(builder).ToImmutableArray();

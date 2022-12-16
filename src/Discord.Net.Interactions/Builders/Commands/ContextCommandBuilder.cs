@@ -15,12 +15,6 @@ namespace Discord.Interactions.Builders
         public ApplicationCommandType CommandType { get; set; }
 
         /// <summary>
-        ///     Gets the default permission of this command.
-        /// </summary>
-        [Obsolete($"To be deprecated soon, use {nameof(IsEnabledInDm)} and {nameof(DefaultMemberPermissions)} instead.")]
-        public bool DefaultPermission { get; set; } = true;
-
-        /// <summary>
         ///     Gets whether this command can be used in DMs.
         /// </summary>
         public bool IsEnabledInDm { get; set; } = true;
@@ -50,20 +44,6 @@ namespace Discord.Interactions.Builders
         public ContextCommandBuilder SetType (ApplicationCommandType commandType)
         {
             CommandType = commandType;
-            return this;
-        }
-
-        /// <summary>
-        ///     Sets <see cref="DefaultPermission"/>.
-        /// </summary>
-        /// <param name="defaultPermision">New value of the <see cref="DefaultPermission"/>.</param>
-        /// <returns>
-        ///     The builder instance.
-        /// </returns>
-        [Obsolete($"To be deprecated soon, use {nameof(SetEnabledInDm)} and {nameof(WithDefaultMemberPermissions)} instead.")]
-        public ContextCommandBuilder SetDefaultPermission (bool defaultPermision)
-        {
-            DefaultPermission = defaultPermision;
             return this;
         }
 

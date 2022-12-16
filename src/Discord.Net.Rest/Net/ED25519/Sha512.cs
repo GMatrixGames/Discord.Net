@@ -45,7 +45,7 @@ namespace Discord.Net.ED25519
         /// <param name="length">Sequence length</param>
         public void Update(byte[] data, int index, int length)
         {
-            
+
             Array16<ulong> block;
             int bytesInBuffer = (int)_totalBytes & (BlockSize - 1);
             _totalBytes += (uint)length;
@@ -121,7 +121,7 @@ namespace Discord.Net.ED25519
         /// Finalizes SHA-512 hashing.
         /// </summary>
         /// <returns>Hash bytes</returns>
-        public byte[] Finalize()
+        public byte[] FinalizeHash()
         {
             var result = new byte[64];
             Finalize(new ArraySegment<byte>(result));
@@ -149,7 +149,7 @@ namespace Discord.Net.ED25519
         {
             var hasher = new Sha512();
             hasher.Update(data, index, length);
-            return hasher.Finalize();
+            return hasher.FinalizeHash();
         }
     }
 }

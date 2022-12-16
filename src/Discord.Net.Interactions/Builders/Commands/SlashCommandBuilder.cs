@@ -15,12 +15,6 @@ namespace Discord.Interactions.Builders
         public string Description { get; set; }
 
         /// <summary>
-        ///     Gets and sets the default permission of this command.
-        /// </summary>
-        [Obsolete($"To be deprecated soon, use {nameof(IsEnabledInDm)} and {nameof(DefaultMemberPermissions)} instead.")]
-        public bool DefaultPermission { get; set; } = true;
-
-        /// <summary>
         ///     Gets whether this command can be used in DMs.
         /// </summary>
         public bool IsEnabledInDm { get; set; } = true;
@@ -51,20 +45,6 @@ namespace Discord.Interactions.Builders
         {
             Description = description;
             return this;
-        }
-
-        /// <summary>
-        ///     Sets <see cref="DefaultPermission"/>.
-        /// </summary>
-        /// <param name="permission">New value of the <see cref="DefaultPermission"/>.</param>
-        /// <returns>
-        ///     The builder instance.
-        /// </returns>
-        [Obsolete($"To be deprecated soon, use {nameof(SetEnabledInDm)} and {nameof(WithDefaultMemberPermissions)} instead.")]
-        public SlashCommandBuilder WithDefaultPermission (bool permission)
-        {
-            DefaultPermission = permission;
-            return Instance;
         }
 
         /// <summary>

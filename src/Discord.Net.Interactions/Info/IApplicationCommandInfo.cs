@@ -18,12 +18,6 @@ namespace Discord.Interactions
         ApplicationCommandType CommandType { get; }
 
         /// <summary>
-        ///     Gets the DefaultPermission of this command.
-        /// </summary>
-        [Obsolete($"To be deprecated soon, use {nameof(IsEnabledInDm)} and {nameof(DefaultMemberPermissions)} instead.")]
-        bool DefaultPermission { get; }
-
-        /// <summary>
         ///     Gets whether this command can be used in DMs.
         /// </summary>
         public bool IsEnabledInDm { get; }

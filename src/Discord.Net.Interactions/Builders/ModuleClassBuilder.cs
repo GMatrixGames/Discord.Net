@@ -80,11 +80,6 @@ namespace Discord.Interactions.Builders
                             builder.Description = group.Description;
                         }
                         break;
-                    case DefaultPermissionAttribute defPermission:
-                        {
-                            builder.DefaultPermission = defPermission.IsDefaultPermission;
-                        }
-                        break;
                     case EnabledInDmAttribute enabledInDm:
                         {
                             builder.IsEnabledInDm = enabledInDm.IsEnabled;
@@ -174,11 +169,6 @@ namespace Discord.Interactions.Builders
                             builder.RunMode = command.RunMode;
                         }
                         break;
-                    case DefaultPermissionAttribute defaultPermission:
-                        {
-                            builder.DefaultPermission = defaultPermission.IsDefaultPermission;
-                        }
-                        break;
                     case EnabledInDmAttribute enabledInDm:
                         {
                             builder.IsEnabledInDm = enabledInDm.IsEnabled;
@@ -224,11 +214,6 @@ namespace Discord.Interactions.Builders
                             builder.RunMode = command.RunMode;
 
                             command.CheckMethodDefinition(methodInfo);
-                        }
-                        break;
-                    case DefaultPermissionAttribute defaultPermission:
-                        {
-                            builder.DefaultPermission = defaultPermission.IsDefaultPermission;
                         }
                         break;
                     case EnabledInDmAttribute enabledInDm:
@@ -670,7 +655,7 @@ namespace Discord.Interactions.Builders
                 propertyInfo.SetMethod?.IsStatic == false &&
                 propertyInfo.IsDefined(typeof(ModalInputAttribute));
         }
-        
+
         private static ConstructorInfo GetComplexParameterConstructor(TypeInfo typeInfo, ComplexParameterAttribute complexParameter)
         {
             var ctors = typeInfo.GetConstructors();

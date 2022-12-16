@@ -95,7 +95,6 @@ namespace Discord.Interactions
                 ApplicationCommandType.Message => new MessageCommandBuilder
                 {
                     Name = commandInfo.Name,
-                    IsDefaultPermission = commandInfo.DefaultPermission,
                     DefaultMemberPermissions = ((commandInfo.DefaultMemberPermissions ?? 0) | (commandInfo.Module.DefaultMemberPermissions ?? 0)).SanitizeGuildPermissions(),
                     IsDMEnabled = commandInfo.IsEnabledInDm
                 }
@@ -104,7 +103,6 @@ namespace Discord.Interactions
                 ApplicationCommandType.User => new UserCommandBuilder
                 {
                     Name = commandInfo.Name,
-                    IsDefaultPermission = commandInfo.DefaultPermission,
                     DefaultMemberPermissions = ((commandInfo.DefaultMemberPermissions ?? 0) | (commandInfo.Module.DefaultMemberPermissions ?? 0)).SanitizeGuildPermissions(),
                     IsDMEnabled = commandInfo.IsEnabledInDm
                 }
@@ -160,7 +158,6 @@ namespace Discord.Interactions
                 {
                     Name = moduleInfo.SlashGroupName,
                     Description = moduleInfo.Description,
-                    IsDefaultPermission = moduleInfo.DefaultPermission,
                     IsDMEnabled = moduleInfo.IsEnabledInDm,
                     DefaultMemberPermissions = moduleInfo.DefaultMemberPermissions
                 }

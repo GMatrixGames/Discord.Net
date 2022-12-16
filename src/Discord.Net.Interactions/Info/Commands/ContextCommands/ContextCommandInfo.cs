@@ -15,9 +15,6 @@ namespace Discord.Interactions
         public ApplicationCommandType CommandType { get; }
 
         /// <inheritdoc/>
-        public bool DefaultPermission { get; }
-
-        /// <inheritdoc/>
         public bool IsEnabledInDm { get; }
 
         /// <inheritdoc/>
@@ -36,7 +33,6 @@ namespace Discord.Interactions
             : base(builder, module, commandService)
         {
             CommandType = builder.CommandType;
-            DefaultPermission = builder.DefaultPermission;
             IsEnabledInDm = builder.IsEnabledInDm;
             DefaultMemberPermissions = builder.DefaultMemberPermissions;
             Parameters = builder.Parameters.Select(x => x.Build(this)).ToImmutableArray();
