@@ -96,6 +96,9 @@ namespace Discord.Interactions.Builders
                     case DontAutoRegisterAttribute dontAutoRegister:
                         builder.DontAutoRegister = true;
                         break;
+                    case NsfwCommandAttribute nsfwCommand:
+                        builder.SetNsfw(nsfwCommand.IsNsfw);
+                        break;
                     default:
                         builder.AddAttributes(attribute);
                         break;
@@ -182,6 +185,9 @@ namespace Discord.Interactions.Builders
                     case PreconditionAttribute precondition:
                         builder.WithPreconditions(precondition);
                         break;
+                    case NsfwCommandAttribute nsfwCommand:
+                        builder.SetNsfw(nsfwCommand.IsNsfw);
+                        break;
                     default:
                         builder.WithAttributes(attribute);
                         break;
@@ -228,6 +234,9 @@ namespace Discord.Interactions.Builders
                         break;
                     case PreconditionAttribute precondition:
                         builder.WithPreconditions(precondition);
+                        break;
+                    case NsfwCommandAttribute nsfwCommand:
+                        builder.SetNsfw(nsfwCommand.IsNsfw);
                         break;
                     default:
                         builder.WithAttributes(attribute);
