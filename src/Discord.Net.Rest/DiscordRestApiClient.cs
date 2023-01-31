@@ -4,12 +4,15 @@ using Discord.Net;
 using Discord.Net.Converters;
 using Discord.Net.Queue;
 using Discord.Net.Rest;
+
 using Newtonsoft.Json;
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -1645,8 +1648,9 @@ namespace Discord.API
             options = RequestOptions.CreateOrClone(options);
 
             var ids = new BucketIds(guildId: guildId);
-            string reason = string.IsNullOrWhiteSpace(args.Reason) ? "" : $"&reason={Uri.EscapeDataString(args.Reason)}";
-            await SendAsync("PUT", () => $"guilds/{guildId}/bans/{userId}?delete_message_days={args.DeleteMessageDays}{reason}", ids, options: options).ConfigureAwait(false);
+            if (!string.IsNullOrWhiteSpace(args.Reason))
+                options.AuditLogReason = args.Reason;
+            await SendAsync("PUT", () => $"guilds/{guildId}/bans/{userId}?delete_message_days={args.DeleteMessageDays}", ids, options: options).ConfigureAwait(false);
         }
         /// <exception cref="ArgumentException"><paramref name="guildId"/> and <paramref name="userId"/> must not be equal to zero.</exception>
         public async Task RemoveGuildBanAsync(ulong guildId, ulong userId, RequestOptions options = null)
@@ -1851,8 +1855,9 @@ namespace Discord.API
             options = RequestOptions.CreateOrClone(options);
 
             var ids = new BucketIds(guildId: guildId);
-            reason = string.IsNullOrWhiteSpace(reason) ? "" : $"?reason={Uri.EscapeDataString(reason)}";
-            await SendAsync("DELETE", () => $"guilds/{guildId}/members/{userId}{reason}", ids, options: options).ConfigureAwait(false);
+            if (!string.IsNullOrWhiteSpace(reason))
+                options.AuditLogReason = reason;
+            await SendAsync("DELETE", () => $"guilds/{guildId}/members/{userId}", ids, options: options).ConfigureAwait(false);
         }
         public async Task ModifyGuildMemberAsync(ulong guildId, ulong userId, Rest.ModifyGuildMemberParams args, RequestOptions options = null)
         {
@@ -2093,6 +2098,35 @@ namespace Discord.API
                 endpoint = () => $"guilds/{guildId}/scheduled-events/{eventId}/users?with_member=true&limit={limit}";
 
             return await SendAsync<GuildScheduledEventUser[]>("GET", endpoint, ids, options: options).ConfigureAwait(false);
+        }
+
+        #endregion
+
+        #region Guild Welcome Screen
+
+        public async Task<WelcomeScreen> GetGuildWelcomeScreenAsync(ulong guildId, RequestOptions options = null)
+        {
+            Preconditions.NotEqual(guildId, 0, nameof(guildId));
+            options = RequestOptions.CreateOrClone(options);
+
+            try
+            {
+                var ids = new BucketIds(guildId: guildId);
+                return await SendAsync<WelcomeScreen>("GET", () => $"guilds/{guildId}/welcome-screen", ids, options: options).ConfigureAwait(false);
+            }
+            catch (HttpException ex) when (ex.HttpCode == HttpStatusCode.NotFound) { return null; }
+        }
+
+        public async Task<WelcomeScreen> ModifyGuildWelcomeScreenAsync(ModifyGuildWelcomeScreenParams args, ulong guildId, RequestOptions options = null)
+        {
+            Preconditions.NotEqual(guildId, 0, nameof(guildId));
+            Preconditions.NotNull(args, nameof(args));
+
+            options = RequestOptions.CreateOrClone(options);
+
+            var ids = new BucketIds(guildId: guildId);
+
+            return await SendJsonAsync<WelcomeScreen>("PATCH", () => $"guilds/{guildId}/welcome-screen", args, ids, options: options).ConfigureAwait(false);
         }
 
         #endregion
@@ -2474,6 +2508,22 @@ namespace Discord.API
 
             return $"{string.Join("&", querys)}";
         }
+
+        #endregion
+
+        #region Application Role Connections Metadata
+
+        public async Task<RoleConnectionMetadata[]> GetApplicationRoleConnectionMetadataRecordsAsync(RequestOptions options = null)
+            => await SendAsync<RoleConnectionMetadata[]>("GET", () => $"applications/{CurrentApplicationId}/role-connections/metadata", new BucketIds(), options: options).ConfigureAwait(false);
+
+        public async Task<RoleConnectionMetadata[]> UpdateApplicationRoleConnectionMetadataRecordsAsync(RoleConnectionMetadata[] roleConnections, RequestOptions options = null)
+        => await SendJsonAsync <RoleConnectionMetadata[]>("PUT", () => $"applications/{CurrentApplicationId}/role-connections/metadata", roleConnections, new BucketIds(), options: options).ConfigureAwait(false);
+
+        public async Task<RoleConnection> GetUserApplicationRoleConnectionAsync(ulong applicationId, RequestOptions options = null)
+        => await SendAsync<RoleConnection>("GET", () => $"users/@me/applications/{applicationId}/role-connection", new BucketIds(), options: options);
+
+        public async Task<RoleConnection> ModifyUserApplicationRoleConnectionAsync(ulong applicationId, RoleConnection connection, RequestOptions options = null)
+        => await SendJsonAsync<RoleConnection>("PUT", () => $"users/@me/applications/{applicationId}/role-connection", connection, new BucketIds(), options: options);
 
         #endregion
     }

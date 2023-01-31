@@ -80,7 +80,19 @@ namespace Discord.Rest
         /// <inheritdoc/>
         public MessageType Type { get; private set; }
 
-        /// <inheritdoc/>
+
+        /// <summary>
+        ///     Gets the thread that was started from this message.
+        /// </summary>
+        /// <returns>
+        ///    A <see cref="RestThreadChannel"/> object if this message has thread attached; otherwise <see langword="null"/>.
+        /// </returns>
+        public RestThreadChannel Thread { get; private set; }
+
+        /// <inheritdoc />
+        public MessageRoleSubscriptionData RoleSubscriptionData { get; private set; }
+
+        /// <inheritdoc cref="IMessage.Components"/>
         public IReadOnlyCollection<ActionRowComponent> Components { get; private set; }
         /// <summary>
         ///     Gets a collection of the mentioned users in the message.
@@ -170,26 +182,28 @@ namespace Discord.Rest
                                     parsed.Url.GetValueOrDefault(),
                                     parsed.Disabled.GetValueOrDefault());
                             }
-                        case ComponentType.SelectMenu:
+                        case ComponentType.SelectMenu or ComponentType.ChannelSelect or ComponentType.RoleSelect or ComponentType.MentionableSelect or ComponentType.UserSelect:
                             {
                                 var parsed = (API.SelectMenuComponent)y;
                                 return new SelectMenuComponent(
                                     parsed.CustomId,
-                                    parsed.Options.Select(z => new SelectMenuOption(
+                                    parsed.Options?.Select(z => new SelectMenuOption(
                                         z.Label,
                                         z.Value,
                                         z.Description.GetValueOrDefault(),
                                         z.Emoji.IsSpecified
-                                        ? z.Emoji.Value.Id.HasValue
-                                            ? new Emote(z.Emoji.Value.Id.Value, z.Emoji.Value.Name, z.Emoji.Value.Animated.GetValueOrDefault())
-                                            : new Emoji(z.Emoji.Value.Name)
-                                        : null,
+                                            ? z.Emoji.Value.Id.HasValue
+                                                ? new Emote(z.Emoji.Value.Id.Value, z.Emoji.Value.Name, z.Emoji.Value.Animated.GetValueOrDefault())
+                                                : new Emoji(z.Emoji.Value.Name)
+                                            : null,
                                         z.Default.ToNullable())).ToList(),
                                     parsed.Placeholder.GetValueOrDefault(),
                                     parsed.MinValues,
                                     parsed.MaxValues,
-                                    parsed.Disabled
-                                    );
+                                    parsed.Disabled,
+                                    parsed.Type,
+                                    parsed.ChannelTypes.GetValueOrDefault()
+                                );
                             }
                         default:
                             return null;
@@ -241,6 +255,20 @@ namespace Discord.Rest
                     _userMentions = newMentions.ToImmutable();
                 }
             }
+
+            if (model.RoleSubscriptionData.IsSpecified)
+            {
+                RoleSubscriptionData = new(
+                    model.RoleSubscriptionData.Value.SubscriptionListingId,
+                    model.RoleSubscriptionData.Value.TierName,
+                    model.RoleSubscriptionData.Value.MonthsSubscribed,
+                    model.RoleSubscriptionData.Value.IsRenewal);
+            }
+
+            if (model.Thread.IsSpecified)
+            {
+                Thread = RestThreadChannel.Create(Discord, new RestGuild(Discord, model.Thread.Value.GuildId.Value), model.Thread.Value);
+            }
         }
         /// <inheritdoc />
         public async Task UpdateAsync(RequestOptions options = null)
@@ -260,11 +288,17 @@ namespace Discord.Rest
         /// </returns>
         public override string ToString() => Content;
 
+        #region IMessage
+
+        /// <inheritdoc />
         IUser IMessage.Author => Author;
+
         /// <inheritdoc />
         IReadOnlyCollection<IAttachment> IMessage.Attachments => Attachments;
+
         /// <inheritdoc />
         IReadOnlyCollection<IEmbed> IMessage.Embeds => Embeds;
+
         /// <inheritdoc />
         IReadOnlyCollection<ulong> IMessage.MentionedUserIds => MentionedUsers.Select(x => x.Id).ToImmutableArray();
 
@@ -276,6 +310,8 @@ namespace Discord.Rest
 
         /// <inheritdoc />
         IReadOnlyCollection<IStickerItem> IMessage.Stickers => Stickers;
+        
+        #endregion
 
         /// <inheritdoc />
         public IReadOnlyDictionary<IEmote, ReactionMetadata> Reactions => _reactions.ToDictionary(x => x.Emote, x => new ReactionMetadata { ReactionCount = x.Count, IsMe = x.Me });
