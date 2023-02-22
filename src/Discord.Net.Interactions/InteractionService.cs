@@ -22,7 +22,7 @@ namespace Discord.Interactions
         ///     Occurs when a Slash Command related information is recieved.
         /// </summary>
         public event Func<LogMessage, Task> Log { add { _logEvent.Add(value); } remove { _logEvent.Remove(value); } }
-        internal readonly AsyncEvent<Func<LogMessage, Task>> _logEvent = new ();
+        internal readonly AsyncEvent<Func<LogMessage, Task>> _logEvent = new();
 
         /// <summary>
         ///     Occurs when any type of interaction is executed.
@@ -51,19 +51,19 @@ namespace Discord.Interactions
         ///     Occurs when a Slash Command is executed.
         /// </summary>
         public event Func<SlashCommandInfo, IInteractionContext, IResult, Task> SlashCommandExecuted { add { _slashCommandExecutedEvent.Add(value); } remove { _slashCommandExecutedEvent.Remove(value); } }
-        internal readonly AsyncEvent<Func<SlashCommandInfo, IInteractionContext, IResult, Task>> _slashCommandExecutedEvent = new ();
+        internal readonly AsyncEvent<Func<SlashCommandInfo, IInteractionContext, IResult, Task>> _slashCommandExecutedEvent = new();
 
         /// <summary>
         ///     Occurs when a Context Command is executed.
         /// </summary>
         public event Func<ContextCommandInfo, IInteractionContext, IResult, Task> ContextCommandExecuted { add { _contextCommandExecutedEvent.Add(value); } remove { _contextCommandExecutedEvent.Remove(value); } }
-        internal readonly AsyncEvent<Func<ContextCommandInfo, IInteractionContext, IResult, Task>> _contextCommandExecutedEvent = new ();
+        internal readonly AsyncEvent<Func<ContextCommandInfo, IInteractionContext, IResult, Task>> _contextCommandExecutedEvent = new();
 
         /// <summary>
         ///     Occurs when a Message Component command is executed.
         /// </summary>
         public event Func<ComponentCommandInfo, IInteractionContext, IResult, Task> ComponentCommandExecuted { add { _componentCommandExecutedEvent.Add(value); } remove { _componentCommandExecutedEvent.Remove(value); } }
-        internal readonly AsyncEvent<Func<ComponentCommandInfo, IInteractionContext, IResult, Task>> _componentCommandExecutedEvent = new ();
+        internal readonly AsyncEvent<Func<ComponentCommandInfo, IInteractionContext, IResult, Task>> _componentCommandExecutedEvent = new();
 
         /// <summary>
         ///     Occurs when a Autocomplete command is executed.
@@ -150,7 +150,7 @@ namespace Discord.Interactions
         /// </summary>
         /// <param name="discord">The discord client.</param>
         /// <param name="config">The configuration class.</param>
-        public InteractionService (DiscordSocketClient discord, InteractionServiceConfig config = null)
+        public InteractionService(DiscordSocketClient discord, InteractionServiceConfig config = null)
             : this(() => discord.Rest, config ?? new InteractionServiceConfig()) { }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Discord.Interactions
         /// </summary>
         /// <param name="discord">The discord client.</param>
         /// <param name="config">The configuration class.</param>
-        public InteractionService (DiscordShardedClient discord, InteractionServiceConfig config = null)
+        public InteractionService(DiscordShardedClient discord, InteractionServiceConfig config = null)
             : this(() => discord.Rest, config ?? new InteractionServiceConfig()) { }
 
         /// <summary>
@@ -166,18 +166,18 @@ namespace Discord.Interactions
         /// </summary>
         /// <param name="discord">The discord client.</param>
         /// <param name="config">The configuration class.</param>
-        public InteractionService (BaseSocketClient discord, InteractionServiceConfig config = null)
-            :this(() => discord.Rest, config ?? new InteractionServiceConfig()) { }
+        public InteractionService(BaseSocketClient discord, InteractionServiceConfig config = null)
+            : this(() => discord.Rest, config ?? new InteractionServiceConfig()) { }
 
         /// <summary>
         ///     Initialize a <see cref="InteractionService"/> with provided configurations.
         /// </summary>
         /// <param name="discord">The discord client.</param>
         /// <param name="config">The configuration class.</param>
-        public InteractionService (DiscordRestClient discord, InteractionServiceConfig config = null)
-            :this(() => discord, config ?? new InteractionServiceConfig()) { }
+        public InteractionService(DiscordRestClient discord, InteractionServiceConfig config = null)
+            : this(() => discord, config ?? new InteractionServiceConfig()) { }
 
-        private InteractionService (Func<DiscordRestClient> getRestClient, InteractionServiceConfig config = null)
+        private InteractionService(Func<DiscordRestClient> getRestClient, InteractionServiceConfig config = null)
         {
             config ??= new InteractionServiceConfig();
 
@@ -211,19 +211,19 @@ namespace Discord.Interactions
             LocalizationManager = config.LocalizationManager;
 
             _typeConverterMap = new TypeMap<TypeConverter, IApplicationCommandInteractionDataOption>(this, new ConcurrentDictionary<Type, TypeConverter>
-                {
-                    [typeof(TimeSpan)] = new TimeSpanConverter()
-                }, new ConcurrentDictionary<Type, Type>
-                {
-                    [typeof(IChannel)] = typeof(DefaultChannelConverter<>),
-                    [typeof(IRole)] = typeof(DefaultRoleConverter<>),
-                    [typeof(IAttachment)] = typeof(DefaultAttachmentConverter<>),
-                    [typeof(IUser)] = typeof(DefaultUserConverter<>),
-                    [typeof(IMentionable)] = typeof(DefaultMentionableConverter<>),
-                    [typeof(IConvertible)] = typeof(DefaultValueConverter<>),
-                    [typeof(Enum)] = typeof(EnumConverter<>),
-                    [typeof(Nullable<>)] = typeof(NullableConverter<>)
-                });
+            {
+                [typeof(TimeSpan)] = new TimeSpanConverter()
+            }, new ConcurrentDictionary<Type, Type>
+            {
+                [typeof(IChannel)] = typeof(DefaultChannelConverter<>),
+                [typeof(IRole)] = typeof(DefaultRoleConverter<>),
+                [typeof(IAttachment)] = typeof(DefaultAttachmentConverter<>),
+                [typeof(IUser)] = typeof(DefaultUserConverter<>),
+                [typeof(IMentionable)] = typeof(DefaultMentionableConverter<>),
+                [typeof(IConvertible)] = typeof(DefaultValueConverter<>),
+                [typeof(Enum)] = typeof(EnumConverter<>),
+                [typeof(Nullable<>)] = typeof(NullableConverter<>)
+            });
 
             _compTypeConverterMap = new TypeMap<ComponentTypeConverter, IComponentInteractionData>(this, new ConcurrentDictionary<Type, ComponentTypeConverter>(),
                 new ConcurrentDictionary<Type, Type>
@@ -284,7 +284,7 @@ namespace Discord.Interactions
         /// <returns>
         ///     A task representing the operation for adding modules. The task result contains a collection of the modules added.
         /// </returns>
-        public async Task<IEnumerable<ModuleInfo>> AddModulesAsync (Assembly assembly, IServiceProvider services)
+        public async Task<IEnumerable<ModuleInfo>> AddModulesAsync(Assembly assembly, IServiceProvider services)
         {
             services ??= EmptyServiceProvider.Instance;
 
@@ -322,7 +322,7 @@ namespace Discord.Interactions
         /// <exception cref="InvalidOperationException">
         ///     Thrown when the <typeparamref name="T"/> is not a valid module definition.
         /// </exception>
-        public Task<ModuleInfo> AddModuleAsync<T> (IServiceProvider services) where T : class =>
+        public Task<ModuleInfo> AddModuleAsync<T>(IServiceProvider services) where T : class =>
             AddModuleAsync(typeof(T), services);
 
         /// <summary>
@@ -339,7 +339,7 @@ namespace Discord.Interactions
         /// <exception cref="InvalidOperationException">
         ///     Thrown when the <paramref name="type"/> is not a valid module definition.
         /// </exception>
-        public async Task<ModuleInfo> AddModuleAsync (Type type, IServiceProvider services)
+        public async Task<ModuleInfo> AddModuleAsync(Type type, IServiceProvider services)
         {
             if (!typeof(IInteractionModuleBase).IsAssignableFrom(type))
                 throw new ArgumentException("Type parameter must be a type of Slash Module", nameof(type));
@@ -355,7 +355,7 @@ namespace Discord.Interactions
                 if (_typedModuleDefs.ContainsKey(typeInfo))
                     throw new ArgumentException("Module definition for this type already exists.");
 
-                var moduleDef = ( await ModuleClassBuilder.BuildAsync(new List<TypeInfo> { typeInfo }, this, services).ConfigureAwait(false) ).FirstOrDefault();
+                var moduleDef = (await ModuleClassBuilder.BuildAsync(new List<TypeInfo> { typeInfo }, this, services).ConfigureAwait(false)).FirstOrDefault();
 
                 if (moduleDef.Value == default)
                     throw new InvalidOperationException($"Could not build the module {typeInfo.FullName}, did you pass an invalid type?");
@@ -382,7 +382,7 @@ namespace Discord.Interactions
         /// <returns>
         ///     A task representing the command registration process. The task result contains the active application commands of the target guild.
         /// </returns>
-        public async Task<IReadOnlyCollection<RestGuildCommand>> RegisterCommandsToGuildAsync (ulong guildId, bool deleteMissing = true)
+        public async Task<IReadOnlyCollection<RestGuildCommand>> RegisterCommandsToGuildAsync(ulong guildId, bool deleteMissing = true)
         {
             EnsureClientReady();
 
@@ -407,7 +407,7 @@ namespace Discord.Interactions
         /// <returns>
         ///    A task representing the command registration process. The task result contains the active global application commands of bot.
         /// </returns>
-        public async Task<IReadOnlyCollection<RestGlobalCommand>> RegisterCommandsGloballyAsync (bool deleteMissing = true)
+        public async Task<IReadOnlyCollection<RestGlobalCommand>> RegisterCommandsGloballyAsync(bool deleteMissing = true)
         {
             EnsureClientReady();
 
@@ -650,7 +650,7 @@ namespace Discord.Interactions
             return await RestClient.BulkOverwriteGlobalCommands(props.ToArray()).ConfigureAwait(false);
         }
 
-        private void LoadModuleInternal (ModuleInfo module)
+        private void LoadModuleInternal(ModuleInfo module)
         {
             _moduleDefs.Add(module);
 
@@ -681,7 +681,7 @@ namespace Discord.Interactions
         ///     A task that represents the asynchronous removal operation. The task result contains a value that
         ///     indicates whether the module is successfully removed.
         /// </returns>
-        public Task<bool> RemoveModuleAsync<T> ( ) =>
+        public Task<bool> RemoveModuleAsync<T>() =>
             RemoveModuleAsync(typeof(T));
 
         /// <summary>
@@ -692,7 +692,7 @@ namespace Discord.Interactions
         ///     A task that represents the asynchronous removal operation. The task result contains a value that
         ///     indicates whether the module is successfully removed.
         /// </returns>
-        public async Task<bool> RemoveModuleAsync (Type type)
+        public async Task<bool> RemoveModuleAsync(Type type)
         {
             await _lock.WaitAsync().ConfigureAwait(false);
 
@@ -772,7 +772,7 @@ namespace Discord.Interactions
             return await RestClient.BulkOverwriteGuildCommands(props.ToArray(), guildId).ConfigureAwait(false);
         }
 
-        private bool RemoveModuleInternal (ModuleInfo moduleInfo)
+        private bool RemoveModuleInternal(ModuleInfo moduleInfo)
         {
             if (!_moduleDefs.Remove(moduleInfo))
                 return false;
@@ -847,7 +847,7 @@ namespace Discord.Interactions
         /// <returns>
         ///     A task representing the command execution process. The task result contains the result of the execution.
         /// </returns>
-        public async Task<IResult> ExecuteCommandAsync (IInteractionContext context, IServiceProvider services)
+        public async Task<IResult> ExecuteCommandAsync(IInteractionContext context, IServiceProvider services)
         {
             var interaction = context.Interaction;
 
@@ -863,7 +863,7 @@ namespace Discord.Interactions
             };
         }
 
-        private async Task<IResult> ExecuteSlashCommandAsync (IInteractionContext context, ISlashCommandInteraction interaction, IServiceProvider services)
+        private async Task<IResult> ExecuteSlashCommandAsync(IInteractionContext context, ISlashCommandInteraction interaction, IServiceProvider services)
         {
             var keywords = interaction.Data.GetCommandKeywords();
 
@@ -879,7 +879,7 @@ namespace Discord.Interactions
             return await result.Command.ExecuteAsync(context, services).ConfigureAwait(false);
         }
 
-        private async Task<IResult> ExecuteContextCommandAsync (IInteractionContext context, string input, ApplicationCommandType commandType, IServiceProvider services)
+        private async Task<IResult> ExecuteContextCommandAsync(IInteractionContext context, string input, ApplicationCommandType commandType, IServiceProvider services)
         {
             if (!_contextCommandMaps.TryGetValue(commandType, out var map))
                 return SearchResult<ContextCommandInfo>.FromError(input, InteractionCommandError.UnknownCommand, $"No {commandType} command found.");
@@ -896,7 +896,7 @@ namespace Discord.Interactions
             return await result.Command.ExecuteAsync(context, services).ConfigureAwait(false);
         }
 
-        private async Task<IResult> ExecuteComponentCommandAsync (IInteractionContext context, string input, IServiceProvider services)
+        private async Task<IResult> ExecuteComponentCommandAsync(IInteractionContext context, string input, IServiceProvider services)
         {
             var result = _componentCommandMap.GetCommand(input);
 
@@ -913,15 +913,15 @@ namespace Discord.Interactions
             return await result.Command.ExecuteAsync(context, services).ConfigureAwait(false);
         }
 
-        private async Task<IResult> ExecuteAutocompleteAsync (IInteractionContext context, IAutocompleteInteraction interaction, IServiceProvider services )
+        private async Task<IResult> ExecuteAutocompleteAsync(IInteractionContext context, IAutocompleteInteraction interaction, IServiceProvider services)
         {
             var keywords = interaction.Data.GetCommandKeywords();
 
-            if(_enableAutocompleteHandlers)
+            if (_enableAutocompleteHandlers)
             {
                 var autocompleteHandlerResult = _slashCommandMap.GetCommand(keywords);
 
-                if(autocompleteHandlerResult.IsSuccess)
+                if (autocompleteHandlerResult.IsSuccess)
                 {
                     if (autocompleteHandlerResult.Command._flattenedParameterDictionary.TryGetValue(interaction.Data.Current.Name, out var parameter) && parameter?.AutocompleteHandler is not null)
                         return await parameter.AutocompleteHandler.ExecuteAsync(context, interaction, parameter, services).ConfigureAwait(false);
@@ -932,7 +932,7 @@ namespace Discord.Interactions
 
             var commandResult = _autocompleteCommandMap.GetCommand(keywords);
 
-            if(!commandResult.IsSuccess)
+            if (!commandResult.IsSuccess)
             {
                 await _cmdLogger.DebugAsync($"Unknown command name, skipping autocomplete process ({interaction.Data.CommandName.ToUpper()})");
 
@@ -1161,7 +1161,7 @@ namespace Discord.Interactions
         {
             var serializedValues = new string[args.Length];
 
-            for(var i = 0; i < args.Length; i++)
+            for (var i = 0; i < args.Length; i++)
             {
                 var arg = args[i];
                 var typeReader = _typeReaderMap.Get(arg.GetType(), null);
@@ -1321,7 +1321,7 @@ namespace Discord.Interactions
         public async Task<GuildApplicationCommandPermission> ModifyContextCommandPermissionsAsync(ContextCommandInfo command, ulong guildId,
             params ApplicationCommandPermission[] permissions) => await ModifyApplicationCommandPermissionsAsync(command, guildId, permissions).ConfigureAwait(false);
 
-        private async Task<GuildApplicationCommandPermission> ModifyApplicationCommandPermissionsAsync<T> (T command, ulong guildId,
+        private async Task<GuildApplicationCommandPermission> ModifyApplicationCommandPermissionsAsync<T>(T command, ulong guildId,
             params ApplicationCommandPermission[] permissions) where T : class, IApplicationCommandInfo, ICommandInfo
         {
             if (command is null)
@@ -1331,7 +1331,7 @@ namespace Discord.Interactions
                 throw new InvalidOperationException("This command is not a top level application command. You cannot change its permissions");
 
             var commands = await RestClient.GetGuildApplicationCommands(guildId).ConfigureAwait(false);
-            var appCommand = commands.First(x => x.Name == ( command as IApplicationCommandInfo ).Name);
+            var appCommand = commands.First(x => x.Name == (command as IApplicationCommandInfo).Name);
 
             return await appCommand.ModifyCommandPermissions(permissions).ConfigureAwait(false);
         }
@@ -1345,7 +1345,7 @@ namespace Discord.Interactions
         ///     <see cref="SlashCommandInfo"/> instance for this command.
         /// </returns>
         /// <exception cref="InvalidOperationException">Module or Slash Command couldn't be found.</exception>
-        public SlashCommandInfo GetSlashCommandInfo<TModule> (string methodName) where TModule : class
+        public SlashCommandInfo GetSlashCommandInfo<TModule>(string methodName) where TModule : class
         {
             var module = GetModuleInfo<TModule>();
 
@@ -1361,7 +1361,7 @@ namespace Discord.Interactions
         ///     <see cref="ContextCommandInfo"/> instance for this command.
         /// </returns>
         /// <exception cref="InvalidOperationException">Module or Context Command couldn't be found.</exception>
-        public ContextCommandInfo GetContextCommandInfo<TModule> (string methodName) where TModule : class
+        public ContextCommandInfo GetContextCommandInfo<TModule>(string methodName) where TModule : class
         {
             var module = GetModuleInfo<TModule>();
 
@@ -1377,7 +1377,7 @@ namespace Discord.Interactions
         ///     <see cref="ComponentCommandInfo"/> instance for this command.
         /// </returns>
         /// <exception cref="InvalidOperationException">Module or Component Command couldn't be found.</exception>
-        public ComponentCommandInfo GetComponentCommandInfo<TModule> (string methodName) where TModule : class
+        public ComponentCommandInfo GetComponentCommandInfo<TModule>(string methodName) where TModule : class
         {
             var module = GetModuleInfo<TModule>();
 
@@ -1391,7 +1391,7 @@ namespace Discord.Interactions
         /// <returns>
         ///     <see cref="ModuleInfo"/> instance for this module.
         /// </returns>
-        public ModuleInfo GetModuleInfo<TModule> ( ) where TModule : class
+        public ModuleInfo GetModuleInfo<TModule>() where TModule : class
         {
             if (!typeof(IInteractionModuleBase).IsAssignableFrom(typeof(TModule)))
                 throw new ArgumentException("Type parameter must be a type of Slash Module", nameof(TModule));
@@ -1405,7 +1405,7 @@ namespace Discord.Interactions
         }
 
         /// <inheritdoc/>
-        public void Dispose ( )
+        public void Dispose()
         {
             _lock.Dispose();
         }

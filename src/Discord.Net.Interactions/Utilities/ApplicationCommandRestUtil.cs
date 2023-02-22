@@ -224,7 +224,7 @@ namespace Discord.Interactions
                     Name = command.Name,
                     Description = command.Description,
                     IsDefaultPermission = command.IsDefaultPermission,
-                    DefaultMemberPermissions = (GuildPermission)command.DefaultMemberPermissions.RawValue,
+                    DefaultMemberPermissions = command.DefaultMemberPermissions.RawValue == 0 ? new Optional<GuildPermission>() : (GuildPermission)command.DefaultMemberPermissions.RawValue,
                     IsDMEnabled = command.IsEnabledInDm,
                     IsNsfw = command.IsNsfw,
                     Options = command.Options?.Select(x => x.ToApplicationCommandOptionProps())?.ToList() ?? Optional<List<ApplicationCommandOptionProperties>>.Unspecified,
@@ -235,7 +235,7 @@ namespace Discord.Interactions
                 {
                     Name = command.Name,
                     IsDefaultPermission = command.IsDefaultPermission,
-                    DefaultMemberPermissions = (GuildPermission)command.DefaultMemberPermissions.RawValue,
+                    DefaultMemberPermissions = command.DefaultMemberPermissions.RawValue == 0 ? new Optional<GuildPermission>() : (GuildPermission)command.DefaultMemberPermissions.RawValue,
                     IsNsfw = command.IsNsfw,
                     IsDMEnabled = command.IsEnabledInDm,
                     NameLocalizations = command.NameLocalizations?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty,
@@ -245,7 +245,7 @@ namespace Discord.Interactions
                 {
                     Name = command.Name,
                     IsDefaultPermission = command.IsDefaultPermission,
-                    DefaultMemberPermissions = (GuildPermission)command.DefaultMemberPermissions.RawValue,
+                    DefaultMemberPermissions = command.DefaultMemberPermissions.RawValue == 0 ? new Optional<GuildPermission>() : (GuildPermission)command.DefaultMemberPermissions.RawValue,
                     IsNsfw = command.IsNsfw,
                     IsDMEnabled = command.IsEnabledInDm,
                     NameLocalizations = command.NameLocalizations?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty,
@@ -293,7 +293,7 @@ namespace Discord.Interactions
                         throw new InvalidOperationException($"{input.GetType().FullName} isn't a valid component info class");
                 }
 
-            if(modifyModal is not null)
+            if (modifyModal is not null)
                 modifyModal(builder);
 
             return builder.Build();

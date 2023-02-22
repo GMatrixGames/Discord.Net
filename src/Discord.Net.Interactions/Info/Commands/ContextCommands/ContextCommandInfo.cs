@@ -32,7 +32,7 @@ namespace Discord.Interactions
         /// <inheritdoc/>
         public override bool IgnoreGroupNames => true;
 
-        internal ContextCommandInfo (Builders.ContextCommandBuilder builder, ModuleInfo module, InteractionService commandService)
+        internal ContextCommandInfo(Builders.ContextCommandBuilder builder, ModuleInfo module, InteractionService commandService)
             : base(builder, module, commandService)
         {
             CommandType = builder.CommandType;
@@ -42,7 +42,7 @@ namespace Discord.Interactions
             Parameters = builder.Parameters.Select(x => x.Build(this)).ToImmutableArray();
         }
 
-        internal static ContextCommandInfo Create (Builders.ContextCommandBuilder builder, ModuleInfo module, InteractionService commandService)
+        internal static ContextCommandInfo Create(Builders.ContextCommandBuilder builder, ModuleInfo module, InteractionService commandService)
         {
             return builder.CommandType switch
             {
@@ -53,7 +53,7 @@ namespace Discord.Interactions
         }
 
         /// <inheritdoc/>
-        protected override Task InvokeModuleEvent (IInteractionContext context, IResult result)
+        protected override Task InvokeModuleEvent(IInteractionContext context, IResult result)
             => CommandService._contextCommandExecutedEvent.InvokeAsync(this, context, result);
     }
 }
