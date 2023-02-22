@@ -29,7 +29,7 @@ namespace Discord.Interactions.Builders
         /// </summary>
         public GuildPermission? DefaultMemberPermissions { get; set; } = null;
 
-        internal ContextCommandBuilder (ModuleBuilder module) : base(module) { }
+        internal ContextCommandBuilder(ModuleBuilder module) : base(module) { }
 
         /// <summary>
         ///     Initializes a new <see cref="ContextCommandBuilder"/>.
@@ -37,7 +37,7 @@ namespace Discord.Interactions.Builders
         /// <param name="module">Parent module of this command.</param>
         /// <param name="name">Name of this command.</param>
         /// <param name="callback">Execution callback of this command.</param>
-        public ContextCommandBuilder (ModuleBuilder module, string name, ExecuteCallback callback) : base(module, name, callback) { }
+        public ContextCommandBuilder(ModuleBuilder module, string name, ExecuteCallback callback) : base(module, name, callback) { }
 
         /// <summary>
         ///     Sets <see cref="CommandType"/>.
@@ -46,7 +46,7 @@ namespace Discord.Interactions.Builders
         /// <returns>
         ///     The builder instance.
         /// </returns>
-        public ContextCommandBuilder SetType (ApplicationCommandType commandType)
+        public ContextCommandBuilder SetType(ApplicationCommandType commandType)
         {
             CommandType = commandType;
             return this;
@@ -59,7 +59,7 @@ namespace Discord.Interactions.Builders
         /// <returns>
         ///     The builder instance.
         /// </returns>
-        public override ContextCommandBuilder AddParameter (Action<CommandParameterBuilder> configure)
+        public override ContextCommandBuilder AddParameter(Action<CommandParameterBuilder> configure)
         {
             var parameter = new CommandParameterBuilder(this);
             configure(parameter);
@@ -106,7 +106,7 @@ namespace Discord.Interactions.Builders
             return this;
         }
 
-        internal override ContextCommandInfo Build (ModuleInfo module, InteractionService commandService) =>
+        internal override ContextCommandInfo Build(ModuleInfo module, InteractionService commandService) =>
             ContextCommandInfo.Create(this, module, commandService);
     }
 }
