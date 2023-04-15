@@ -1,5 +1,5 @@
-using System;
 using Discord.API.Rest;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
@@ -15,6 +15,34 @@ namespace Discord.Rest
         {
             var model = await client.ApiClient.GetMyApplicationAsync(options).ConfigureAwait(false);
             return RestApplication.Create(client, model);
+        }
+
+        public static async Task<RestApplication> GetCurrentBotApplicationAsync(BaseDiscordClient client, RequestOptions options)
+        {
+            var model = await client.ApiClient.GetCurrentBotApplicationAsync(options).ConfigureAwait(false);
+            return RestApplication.Create(client, model);
+        }
+
+        public static async Task<API.Application> ModifyCurrentBotApplicationAsync(BaseDiscordClient client, Action<ModifyApplicationProperties> func, RequestOptions options)
+        {
+            var args = new ModifyApplicationProperties();
+            func(args);
+
+            if(args.Tags.IsSpecified)
+                foreach (var tag in args.Tags.Value)
+                    Preconditions.AtMost(tag.Length, DiscordConfig.MaxApplicationTagLength, nameof(args.Tags), $"An application tag must have length less or equal to {DiscordConfig.MaxApplicationTagLength}");
+
+            if(args.Description.IsSpecified)
+                Preconditions.AtMost(args.Description.Value.Length, DiscordConfig.MaxApplicationDescriptionLength, nameof(args.Description), $"An application description tag mus have length less or equal to {DiscordConfig.MaxApplicationDescriptionLength}");
+
+            return await client.ApiClient.ModifyCurrentBotApplicationAsync(new()
+            {
+                Description = args.Description,
+                Tags = args.Tags,
+                Icon = args.Icon.IsSpecified ? args.Icon.Value?.ToModel() : Optional<API.Image?>.Unspecified,
+                InteractionsEndpointUrl = args.InteractionsEndpointUrl,
+                RoleConnectionsEndpointUrl = args.RoleConnectionsEndpointUrl,
+            }, options);
         }
 
         public static async Task<RestChannel> GetChannelAsync(BaseDiscordClient client,
@@ -52,10 +80,9 @@ namespace Discord.Rest
             return models.Select(model => RestConnection.Create(client, model)).ToImmutableArray();
         }
 
-        public static async Task<RestInviteMetadata> GetInviteAsync(BaseDiscordClient client,
-            string inviteId, RequestOptions options)
+        public static async Task<RestInviteMetadata> GetInviteAsync(BaseDiscordClient client, string inviteId, RequestOptions options, ulong? scheduledEventId = null)
         {
-            var model = await client.ApiClient.GetInviteAsync(inviteId, options).ConfigureAwait(false);
+            var model = await client.ApiClient.GetInviteAsync(inviteId, options, scheduledEventId).ConfigureAwait(false);
             if (model != null)
                 return RestInviteMetadata.Create(client, null, null, model);
             return null;

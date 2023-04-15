@@ -82,6 +82,7 @@ namespace Discord
         MaximumWebhooksReached = 30007,
         MaximumEmojisReached = 30008,
         MaximumReactionsReached = 30010,
+        MaximumNumberOfGDMsReached = 30011,
         MaximumGuildChannelsReached = 30013,
         MaximumAttachmentsReached = 30015,
         MaximumInvitesReached = 30016,
@@ -102,7 +103,10 @@ namespace Discord
         MaximumNumberOfEditsReached = 30046,
         MaximumNumberOfPinnedThreadsInAForumChannelReached = 30047,
         MaximumNumberOfTagsInAForumChannelReached = 30048,
+        MaximumNumberOfPremiumEmojisReached = 30056,
         MaximumNumberOfWebhooksReached = 30058,
+        MaximumNumberOfChannelPermissionOverwritesReached = 30060,
+        TheChannelsForThisGuildAreTooLarge = 30061,
         #endregion
 
         #region General Request Errors (40XXX)
@@ -173,14 +177,18 @@ namespace Discord
         InvalidThreadNotificationSettings = 50084,
         BeforeValueEarlierThanThreadCreation = 50085,
         CommunityServerChannelsMustBeTextChannels = 50086,
+        TheEntityTypeOfTheEventIsDifferentFromTheEntityYouAreTryingToStartTheEventFor = 50091,
         ServerLocaleUnavailable = 50095,
         ServerRequiresMonetization = 50097,
         ServerRequiresBoosts = 50101,
         RequestBodyContainsInvalidJSON = 50109,
         OwnershipCannotBeTransferredToABotUser = 50132,
         FailedToResizeAssetBelowTheMaximumSize = 50138,
+        CannotMixSubscriptionAndNonSubscriptionRolesForAnEmoji = 50144,
+        CannotConvertBetweenPremiumEmojiAndNormalEmoji = 50145,
         UploadedFileNotFound = 50146,
         FeatureInProcessOfRollingOut = 50155,
+        CannotSendVoiceMessageInThisChannel = 50173,
         MissingPermissionToSendThisSticker = 50600,
         #endregion
 
