@@ -235,11 +235,15 @@ namespace Discord.Rest
             return model == null ? null : RestBan.Create(client, model);
         }
 
-        public static Task AddBanAsync(IGuild guild, BaseDiscordClient client,
-            ulong userId, int pruneDays, string reason, RequestOptions options)
+        public static Task AddBanAsync(IGuild guild, BaseDiscordClient client, ulong userId, int pruneDays, string reason, RequestOptions options)
         {
-            var args = new CreateGuildBanParams { DeleteMessageDays = pruneDays, Reason = reason };
-            return client.ApiClient.CreateGuildBanAsync(guild.Id, userId, args, options);
+            Preconditions.AtLeast(pruneDays, 0, nameof(pruneDays), "Prune length must be within [0, 7]");
+            return client.ApiClient.CreateGuildBanAsync(guild.Id, userId, (uint)pruneDays * 86400, reason, options);
+        }
+
+        public static Task AddBanAsync(IGuild guild, BaseDiscordClient client, ulong userId, uint pruneSeconds, RequestOptions options)
+        {
+            return client.ApiClient.CreateGuildBanAsync(guild.Id, userId, pruneSeconds, null, options);
         }
 
         public static Task RemoveBanAsync(IGuild guild, BaseDiscordClient client, ulong userId, RequestOptions options)
@@ -247,9 +251,20 @@ namespace Discord.Rest
 
         public static async Task<BulkBanResult> BulkBanAsync(IGuild guild, BaseDiscordClient client, ulong[] userIds, int? deleteMessageSeconds, RequestOptions options)
         {
-            var model = await client.ApiClient.BulkBanAsync(guild.Id, userIds, deleteMessageSeconds, options);
-            return new(model.BannedUsers?.ToImmutableArray() ?? ImmutableArray<ulong>.Empty,
-                model.FailedUsers?.ToImmutableArray() ?? ImmutableArray<ulong>.Empty);
+            var pos = 0;
+            var banned = new List<ulong>(userIds.Length);
+            var failed = new List<ulong>();
+            while (pos * DiscordConfig.MaxBansPerBulkBatch < userIds.Length)
+            {
+                var toBan = userIds
+                    .Skip(pos * DiscordConfig.MaxBansPerBulkBatch)
+                    .Take(DiscordConfig.MaxBansPerBulkBatch);
+                pos++;
+                var model = await client.ApiClient.BulkBanAsync(guild.Id, toBan.ToArray(), deleteMessageSeconds, options);
+                banned.AddRange(model.BannedUsers ?? []);
+                failed.AddRange(model.FailedUsers ?? []);
+            }
+            return new(banned.ToImmutableArray(), failed.ToImmutableArray());
         }
         #endregion
 
@@ -616,7 +631,7 @@ namespace Discord.Rest
 
             var createGuildRoleParams = new API.Rest.ModifyGuildRoleParams
             {
-                Color = color?.RawValue ?? Optional.Create<uint>(), 
+                Color = color?.RawValue ?? Optional.Create<uint>(),
                 Hoist = isHoisted,
                 Mentionable = isMentionable,
                 Name = name,

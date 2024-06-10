@@ -1,7 +1,8 @@
 ---
 uid: Home.Landing
 title: Home
-_layout: landing
+_disableToc: true
+_disableBreadcrumb: true
 ---
 
 ![logo](marketing/logo/SVG/Combinationmark%20White%20Border.svg)
@@ -9,8 +10,10 @@ _layout: landing
 [![GitHub](https://img.shields.io/github/last-commit/discord-net/Discord.Net)](https://github.com/discord-net/Discord.Net)
 [![NuGet](https://img.shields.io/nuget/vpre/Discord.Net.svg?maxAge=2592000)](https://www.nuget.org/packages/Discord.Net)
 [![MyGet](https://img.shields.io/myget/discord-net/vpre/Discord.Net.svg)](https://www.myget.org/feed/Packages/discord-net)
-[![Build Status](https://dev.azure.com/discord-net/Discord.Net/_apis/build/status/discord-net.Discord.Net?branchName=dev)](https://dev.azure.com/discord-net/Discord.Net/_build/latest?definitionId=1&branchName=dev)
-[![Discord](https://discord.com/api/guilds/848176216011046962/widget.png)](https://discord.gg/dnet)
+[![Dotnet Build](https://github.com/discord-net/Discord.Net/actions/workflows/dotnet.yml/badge.svg)](https://github.com/discord-net/Discord.Net/actions/workflows/dotnet.yml)
+[![Deploy Docs](https://github.com/discord-net/Discord.Net/actions/workflows/docs.yml/badge.svg)](https://github.com/discord-net/Discord.Net/actions/workflows/docs.yml)
+[![Discord](https://img.shields.io/discord/848176216011046962?logo=discord&logoColor=white&label=discord&color=%235865F2)](https://discord.gg/dnet)
+
 
 ## What is Discord.NET?
 
@@ -31,8 +34,7 @@ objects in the library.
 ## Nightlies
 
 Nightlies are builds of Discord.NET that are still in an experimental phase, and have not been released.  
-They are available through 3 different sources:
-- [MyGet](https://www.myget.org/F/discord-net/api/v3/index.json)
+They are available through 2 different sources:
 - [BaGet](https://baget.discordnet.dev/)
 - [GitHub Packages](https://github.com/orgs/discord-net/packages?repo_name=Discord.Net)
 
