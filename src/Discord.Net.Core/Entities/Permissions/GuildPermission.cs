@@ -269,6 +269,16 @@ namespace Discord
         CreateGuildExpressions = 1L << 43,
 
         /// <summary>
+        ///     Allows members to edit and cancel events in this channel.
+        /// </summary>
+        CreateEvents = 1L << 44,
+
+        /// <summary>
+        ///     Allows the usage of custom soundboard sounds from other servers.
+        /// </summary>
+        UseExternalSounds = 1L << 45,
+
+        /// <summary>
         ///     Allows sending voice messages.
         /// </summary>
         SendVoiceMessages = 1L << 46,
@@ -287,5 +297,10 @@ namespace Discord
         ///     Allows sending polls.
         /// </summary>
         SendPolls = 1L << 49,
+
+        /// <summary>
+        ///     Allows user-installed apps to send public responses.
+        /// </summary>
+        UseExternalApps = 1L << 50,
     }
 }

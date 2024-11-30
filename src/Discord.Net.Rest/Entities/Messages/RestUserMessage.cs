@@ -57,6 +57,9 @@ namespace Discord.Rest
         /// <inheritdoc />
         public MessageResolvedData ResolvedData { get; internal set; }
 
+        /// <inheritdoc />
+        public IReadOnlyCollection<MessageSnapshot> ForwardedMessages { get; internal set; }
+
         internal RestUserMessage(BaseDiscordClient discord, ulong id, IMessageChannel channel, IUser author, MessageSource source)
             : base(discord, id, channel, author, source)
         {
@@ -169,7 +172,15 @@ namespace Discord.Rest
                 ResolvedData = new MessageResolvedData(users, members, roles, channels);
             }
             if (model.InteractionMetadata.IsSpecified)
-                InteractionMetadata = model.InteractionMetadata.Value.ToInteractionMetadata();
+                InteractionMetadata = model.InteractionMetadata.Value.ToInteractionMetadata(Discord);
+
+            if (model.MessageSnapshots.IsSpecified)
+            {
+                ForwardedMessages = model.MessageSnapshots.Value.Select(x =>
+                    new MessageSnapshot(RestMessage.Create(Discord, null, null, x.Message))).ToImmutableArray();
+            }
+            else
+                ForwardedMessages = ImmutableArray<MessageSnapshot>.Empty;
 
             if (model.Poll.IsSpecified)
                 Poll = model.Poll.Value.ToEntity();

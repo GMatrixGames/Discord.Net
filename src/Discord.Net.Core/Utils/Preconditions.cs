@@ -98,7 +98,7 @@ namespace Discord
         }
 
         public static void MessageAtLeastOneOf(string text = null, MessageComponent components = null, ICollection<IEmbed> embeds = null,
-                    ICollection<ISticker> stickers = null, IEnumerable<FileAttachment> attachments = null, PollProperties poll = null)
+                    ICollection<ISticker> stickers = null, IEnumerable<FileAttachment> attachments = null, PollProperties poll = null, MessageReference messageReference = null)
         {
             if (!string.IsNullOrEmpty(text))
                 return;
@@ -116,6 +116,9 @@ namespace Discord
                 return;
 
             if (poll is not null)
+                return;
+
+            if (messageReference?.ReferenceType.GetValueOrDefault(MessageReferenceType.Default) is MessageReferenceType.Forward)
                 return;
 
             throw new ArgumentException($"At least one of 'Content', 'Embeds', 'Components', 'Stickers', 'Attachments' or 'Poll' must be specified.");
@@ -138,8 +141,8 @@ namespace Discord
                 throw new ArgumentOutOfRangeException(nameof(poll.Question), $"Poll question text must be less than or equal to {DiscordConfig.MaxPollQuestionTextLength} characters.");
             if (string.IsNullOrWhiteSpace(poll.Question.Text) && poll.Question.Emoji is null)
                 throw new ArgumentException("Poll question must have at least one of text or emoji.", nameof(poll.Question));
-            if (poll.Duration is > 168 or 0)
-                throw new ArgumentOutOfRangeException(nameof(poll.Duration), "Poll duration must be between 1 and 168 hours.");
+            if (poll.Duration is > 768 or 0)
+                throw new ArgumentOutOfRangeException(nameof(poll.Duration), "Poll duration must be between 1 and 768 hours.");
         }
 
         #endregion

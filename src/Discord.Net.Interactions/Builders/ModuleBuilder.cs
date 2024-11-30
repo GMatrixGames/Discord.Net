@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -461,6 +462,10 @@ namespace Discord.Interactions.Builders
         {
             if (TypeInfo is not null && ModuleClassBuilder.IsValidModuleDefinition(TypeInfo))
             {
+                using var scope = services?.CreateScope();
+                if (interactionService._autoServiceScopes)
+                    services = scope?.ServiceProvider ?? EmptyServiceProvider.Instance;
+
                 var instance = ReflectionUtils<IInteractionModuleBase>.CreateObject(TypeInfo, interactionService, services);
 
                 try

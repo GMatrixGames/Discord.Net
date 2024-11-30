@@ -1,5 +1,67 @@
 # Changelog
 
+## [3.16.0] - 2024-09-14
+
+### Added
+- #2918 Message Forwards (c4d90cd)
+- #2976 New interactions precondition attribute that supports app commands (1f252a3)
+- #2978 Add Application Approximate User Install Count (47f98bc)
+- #2987 Add guild profile banners (57eb906)
+- #3002 Add subscriptions support (88ea2ed)
+- #2994 Add more member flags (9b8c7b1)
+- #2989 Add GetRoleAsync (466b491)
+- #2986 Add StickFormat gif and animated guild icon (2aaa0fd)
+
+### Fixed
+- #3001 StackOverflow in sharded clients (c53aac3)
+  
+### Misc
+- #2979 Create a (Discord)Color using a string (bc84b94)
+- #2991 Minor optimization + make sure top level components are action rows (623a457)
+- #2995 Use interaction method in `InteractionModuleBase.DeleteOriginalResponse` (f65d3ad)
+- #2999 Option to dump gw payloads on errors (b87ec6e)
+  
+
+## [3.15.3] - 2024-07-21
+
+### Added
+- #2963 Application Emojis (26bb789)
+- [EXPERIMENTAL] #2931 Member search v2 (e18915a)
+- #2952 add `IsAvailable` to `GuildEmote` (cb79f04)
+- #2965 Add team member `Role` property (6e531a2)
+
+### Fixed
+- #2958 crash when poll is null in RestMessageComponent (24c7605)
+- #2962 incomplete validation when ChannelFlags.RequireTag is true (f5fdfb2)
+- #2948 Fix IndexOf bug in CreateBucketId (ec0ba49)
+- #2959 Fix automod related events in the sharded client (8b6be64)
+- #2966 Fix `CustomSticker.DeleteAsync()` (359f6db)
+
+### Misc
+- #2951 Update for the breaking change discord has made + v3 is cringe (8afea2c)
+- #2953 longer polls (ae49794)
+- #2956 Add missing role tags (6b691b1)
+- #2957 Longer MaxCustomBlockMessageLength (bae7861)
+
+
+## [3.15.2] - 2024-06-18
+### Hotfix
+- fix `AutocompleteAttribute` with empty constructor
+- fix `Emote` constructor related issues
+
+## [3.15.1] - 2024-06-18
+### Added
+- #2927 Add missing PollProperties (a59f4ba)
+- #2942 Add purchase notification (9d92435)
+- #2934 Add MessageCallData (21195a8)
+- #2932 Config Bypass for CanSendResponse (9030a5b)
+- #2933 Premium Buttons (531b5eb)
+- #2941 Add UseExternalApps permission (f7f29d5)
+### Misc
+- #2936 Public constructor for Emote (3be72a8)
+- #2935 Generic autocomplete (35b102a)
+- #2929 Enable nuget debug symbols. (aa424f6)
+
 ## [3.15.0] - 2024-05-12
 ### Added
 - #2902 Polls (476ec06)
